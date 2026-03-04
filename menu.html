@@ -17,6 +17,54 @@
             }
         }
     </script>
+    <style>
+        /* Custom styles for better UX */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Custom range slider styling */
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #E4002B;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #E4002B;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-webkit-slider-track {
+            background: linear-gradient(to right, #E4002B 0%, #E4002B var(--value), #e5e7eb var(--value), #e5e7eb 100%);
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        /* Checkbox styling */
+        input[type="checkbox"]:checked {
+            background-color: #E4002B;
+            border-color: #E4002B;
+        }
+        
+        /* Smooth transitions */
+        .menu-item-transition {
+            transition: all 0.3s ease;
+        }
+    </style>
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <!-- Header / Navigation -->
@@ -35,15 +83,24 @@
                 </div>
                 
                 <div class="flex items-center space-x-4">
-                    <a href="#" class="hidden md:flex items-center space-x-2 text-gray-700 hover:text-kfc-red transition">
+                    <a href="#" class="sign-in-button hidden md:flex items-center space-x-2 text-gray-700 hover:text-kfc-red transition">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                         <span class="font-medium">Sign In</span>
                     </a>
-                    <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">
-                        ₹0
-                    </a>
+                    <div class="user-menu hidden md:flex items-center space-x-2">
+                        <span class="text-gray-700 font-medium">Hi, <span class="user-name-display text-kfc-red"></span>!</span>
+                        <a href="profile.html" class="text-gray-700 hover:text-kfc-red transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <button class="cart-toggle bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium relative">
+                        <span class="cart-button-price">₹0</span>
+                        <span class="cart-count hidden absolute -top-2 -right-2 bg-yellow-400 text-kfc-dark w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">0</span>
+                    </button>
                 </div>
             </div>
             
@@ -63,6 +120,94 @@
         <div class="container mx-auto px-4 text-center">
             <h1 class="text-4xl md:text-5xl font-bold mb-4">KFC MENU</h1>
             <p class="text-xl opacity-90">Explore our delicious range of finger lickin' good food</p>
+        </div>
+    </section>
+
+    <!-- Search Bar -->
+    <section class="bg-white border-b border-gray-200 py-4">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto">
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Search for chicken, burgers, biryani..." 
+                           class="w-full px-6 py-3 pr-12 border-2 border-gray-300 rounded-full focus:border-kfc-red focus:outline-none">
+                    <svg class="w-6 h-6 text-gray-400 absolute right-4 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+
+                <!-- Filter and Sort Controls -->
+                <div class="mt-6 bg-white rounded-2xl shadow-lg p-6 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                            </svg>
+                            Filters & Sort
+                        </h3>
+                        <button id="clearFilters" class="text-kfc-red hover:text-red-700 font-medium text-sm">Clear All</button>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Filter by Category</label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+                            <label class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition">
+                                <input type="checkbox" class="category-filter w-4 h-4 text-kfc-red rounded" value="chicken" checked>
+                                <span class="text-sm">Chicken</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition">
+                                <input type="checkbox" class="category-filter w-4 h-4 text-kfc-red rounded" value="burgers" checked>
+                                <span class="text-sm">Burgers</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition">
+                                <input type="checkbox" class="category-filter w-4 h-4 text-kfc-red rounded" value="biryani" checked>
+                                <span class="text-sm">Biryani</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition">
+                                <input type="checkbox" class="category-filter w-4 h-4 text-kfc-red rounded" value="snacks" checked>
+                                <span class="text-sm">Snacks</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition">
+                                <input type="checkbox" class="category-filter w-4 h-4 text-kfc-red rounded" value="beverages" checked>
+                                <span class="text-sm">Beverages</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition">
+                                <input type="checkbox" class="category-filter w-4 h-4 text-kfc-red rounded" value="desserts" checked>
+                                <span class="text-sm">Desserts</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Price Range Filter -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Price Range: ₹<span id="priceRangeValue">0 - 1000</span></label>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs text-gray-500">₹0</span>
+                            <input type="range" id="priceRange" min="0" max="1000" value="1000" class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-kfc-red">
+                            <span class="text-xs text-gray-500">₹1000</span>
+                        </div>
+                    </div>
+
+                    <!-- Sort Options -->
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
+                            <select id="sortBy" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-kfc-red focus:outline-none">
+                                <option value="default">Default</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="popularity">Popularity</option>
+                                <option value="rating">Rating</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <div class="text-sm text-gray-600">
+                                <span id="resultCount" class="font-bold text-kfc-red">31</span> items found
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -106,8 +251,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Item 1 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80" alt="8 Pcs Chicken" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="chicken-bucket-8pc" data-item-name="8 Pcs Chicken Bucket" data-item-price="699" data-item-image="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">BESTSELLER</span>
@@ -115,15 +266,21 @@
                         <p class="text-gray-600 text-sm mb-4">8 pieces of signature hot & crispy chicken</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹699</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="chicken-bucket-8pc" data-name="8 Pcs Chicken Bucket" data-price="699" data-image="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Item 2 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1562967914-608f82629710?w=600&q=80" alt="12 Pcs Chicken" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="chicken-bucket-12pc" data-item-name="12 Pcs Chicken Bucket" data-item-price="899" data-item-image="https://images.unsplash.com/photo-1562967914-608f82629710?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-orange-100 text-orange-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">FAMILY FEAST</span>
@@ -131,30 +288,42 @@
                         <p class="text-gray-600 text-sm mb-4">12 pieces of signature hot & crispy chicken</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹899</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="chicken-bucket-12pc" data-name="12 Pcs Chicken Bucket" data-price="899" data-image="https://images.unsplash.com/photo-1562967914-608f82629710?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Item 3 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1598514982901-ae62764ae75e?w=600&q=80" alt="6 Pcs Chicken" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="hot-wings-6pc" data-item-name="6 Pcs Hot Wings Bucket" data-item-price="299" data-item-image="https://images.unsplash.com/photo-1598514982901-ae62764ae75e?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">6 Pcs Hot Wings Bucket</h3>
                         <p class="text-gray-600 text-sm mb-4">Spicy chicken wings in signature marinade</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹299</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="hot-wings-6pc" data-name="6 Pcs Hot Wings Bucket" data-price="299" data-image="https://images.unsplash.com/photo-1598514982901-ae62764ae75e?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Item 4 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&q=80" alt="Mingles Bucket" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="mingles-bucket" data-item-name="Mingles Bucket" data-item-price="239" data-item-image="https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">VALUE FOR MONEY</span>
@@ -162,30 +331,42 @@
                         <p class="text-gray-600 text-sm mb-4">4 wings, 2 strips & 2 dips</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹239</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="mingles-bucket" data-name="Mingles Bucket" data-price="239" data-image="https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Item 5 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1585238341710-5176e0ba29f3?w=600&q=80" alt="Chicken Strips" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="chicken-strips-5pc" data-item-name="5 Pcs Chicken Strips" data-item-price="199" data-item-image="https://images.unsplash.com/photo-1585238341710-5176e0ba29f3?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">5 Pcs Chicken Strips</h3>
                         <p class="text-gray-600 text-sm mb-4">Tender chicken strips with choice of dip</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹199</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="chicken-strips-5pc" data-name="5 Pcs Chicken Strips" data-price="199" data-image="https://images.unsplash.com/photo-1585238341710-5176e0ba29f3?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Item 6 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1594221708779-94832f4320d1?w=600&q=80" alt="Smoky Red Grilled" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="smoky-grilled" data-item-name="Smoky Red Grilled Chicken" data-item-price="449" data-item-image="https://images.unsplash.com/photo-1594221708779-94832f4320d1?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">NEW</span>
@@ -193,7 +374,7 @@
                         <p class="text-gray-600 text-sm mb-4">5 pcs of smoky grilled chicken</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹449</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="smoky-grilled" data-name="Smoky Red Grilled Chicken" data-price="449" data-image="https://images.unsplash.com/photo-1594221708779-94832f4320d1?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
@@ -211,8 +392,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Burger 1 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80" alt="Zinger Burger" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="zinger-pro" data-item-name="Zinger Pro Burger" data-item-price="229" data-item-image="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">BESTSELLER</span>
@@ -220,30 +407,42 @@
                         <p class="text-gray-600 text-sm mb-4">Crunchy chicken fillet with spicy zinger sauce</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹229</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="zinger-pro" data-name="Zinger Pro Burger" data-price="229" data-image="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Burger 2 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80" alt="Classic Zinger" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="classic-zinger" data-item-name="Classic Zinger Burger" data-item-price="189" data-item-image="https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Classic Zinger Burger</h3>
                         <p class="text-gray-600 text-sm mb-4">Original zinger with lettuce & mayo</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹189</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="classic-zinger" data-name="Classic Zinger Burger" data-price="189" data-image="https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Burger 3 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&q=80" alt="Veg Zinger" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="veg-zinger" data-item-name="Veg Zinger Burger" data-item-price="169" data-item-image="https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full mb-2 font-semibold">VEG</span>
@@ -251,30 +450,42 @@
                         <p class="text-gray-600 text-sm mb-4">Crispy veg patty with tangy sauce</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹169</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="veg-zinger" data-name="Veg Zinger Burger" data-price="169" data-image="https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Burger 4 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=600&q=80" alt="Classic Chicken Burger" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="classic-chicken" data-item-name="Classic Chicken Burger" data-item-price="129" data-item-image="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Classic Chicken Burger</h3>
                         <p class="text-gray-600 text-sm mb-4">Juicy chicken patty with fresh veggies</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹129</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="classic-chicken" data-name="Classic Chicken Burger" data-price="129" data-image="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Burger 5 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1619894991210-1c6f1b0c1beb?w=600&q=80" alt="Tandoori Burger" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
+                        <img src="https://dukaan.b-cdn.net/700x700/webp/17182/71062768-e2c6-42f8-9603-28acff8c68c2.png">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="tandoori-zinger" data-item-name="Tandoori Zinger Burger" data-item-price="209" data-item-image="https://images.unsplash.com/photo-1619894991210-1c6f1b0c1beb?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-orange-100 text-orange-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">INDIAN SPECIAL</span>
@@ -282,15 +493,21 @@
                         <p class="text-gray-600 text-sm mb-4">Tandoori flavored chicken with mint mayo</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹209</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="tandoori-zinger" data-name="Tandoori Zinger Burger" data-price="209" data-image="https://images.unsplash.com/photo-1619894991210-1c6f1b0c1beb?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Burger 6 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&q=80" alt="Double Down Burger" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="double-down" data-item-name="Double Down Burger" data-item-price="349" data-item-image="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">PREMIUM</span>
@@ -298,7 +515,7 @@
                         <p class="text-gray-600 text-sm mb-4">Two crispy chicken fillets as buns</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹349</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="double-down" data-name="Double Down Burger" data-price="349" data-image="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
@@ -316,8 +533,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Biryani 1 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&q=80" alt="Classic Biryani" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="classic-biryani" data-item-name="Classic Biryani Bucket" data-item-price="399" data-item-image="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">BESTSELLER</span>
@@ -325,15 +548,21 @@
                         <p class="text-gray-600 text-sm mb-4">Aromatic biryani rice with 4 hot wings</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹399</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="classic-biryani" data-name="Classic Biryani Bucket" data-price="399" data-image="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Biryani 2 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1642821373181-696a54913e93?w=600&q=80" alt="Hyderabadi Biryani" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="hyderabadi-biryani" data-item-name="Hyderabadi Biryani Bucket" data-item-price="449" data-item-image="https://images.unsplash.com/photo-1642821373181-696a54913e93?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-orange-100 text-orange-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">SPICY</span>
@@ -341,15 +570,21 @@
                         <p class="text-gray-600 text-sm mb-4">Spicy Hyderabadi style with 5 pcs chicken</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹449</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="hyderabadi-biryani" data-name="Hyderabadi Biryani Bucket" data-price="449" data-image="https://images.unsplash.com/photo-1642821373181-696a54913e93?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Biryani 3 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1633945274371-c2d86792f29d?w=600&q=80" alt="Veg Biryani" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
+                        <img src="https://www.cookingcarnival.com/wp-content/uploads/2025/09/Vegetable-Dum-Biryani-2.webp" alt="Veg Biryani" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="veg-biryani" data-item-name="Veg Biryani Bucket" data-item-price="329" data-item-image="https://images.unsplash.com/photo-1633945274371-c2d86792f29d?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full mb-2 font-semibold">VEG</span>
@@ -357,15 +592,21 @@
                         <p class="text-gray-600 text-sm mb-4">Vegetable biryani with paneer tikka</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹329</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="veg-biryani" data-name="Veg Biryani Bucket" data-price="329" data-image="https://images.unsplash.com/photo-1633945274371-c2d86792f29d?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Biryani 4 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&q=80" alt="Tandoori Biryani" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="tandoori-biryani" data-item-name="Tandoori Biryani Bucket" data-item-price="429" data-item-image="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">NEW</span>
@@ -373,7 +614,7 @@
                         <p class="text-gray-600 text-sm mb-4">Tandoori flavored rice with grilled chicken</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹429</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="tandoori-biryani" data-name="Tandoori Biryani Bucket" data-price="429" data-image="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
@@ -391,8 +632,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Snack 1 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1619880049958-8d3eafca6b3c?w=600&q=80" alt="Popcorn Chicken" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="popcorn-chicken" data-item-name="Popcorn Chicken" data-item-price="149" data-item-image="https://images.unsplash.com/photo-1619880049958-8d3eafca6b3c?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">BESTSELLER</span>
@@ -400,30 +647,42 @@
                         <p class="text-gray-600 text-sm mb-4">Crispy bite-sized chicken pieces</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹149</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="popcorn-chicken" data-name="Popcorn Chicken" data-price="149" data-image="https://images.unsplash.com/photo-1619880049958-8d3eafca6b3c?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Snack 2 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&q=80" alt="French Fries" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="peri-peri-fries" data-item-name="Peri Peri French Fries" data-item-price="99" data-item-image="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Peri Peri French Fries</h3>
                         <p class="text-gray-600 text-sm mb-4">Crispy fries with peri peri seasoning</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹99</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="peri-peri-fries" data-name="Peri Peri French Fries" data-price="99" data-image="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Snack 3 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1600289031464-74d374b64991?w=600&q=80" alt="Chicken Wings" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="hot-wings-4pc" data-item-name="4 Pcs Hot Wings" data-item-price="179" data-item-image="https://images.unsplash.com/photo-1600289031464-74d374b64991?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-orange-100 text-orange-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">HOT & SPICY</span>
@@ -431,30 +690,42 @@
                         <p class="text-gray-600 text-sm mb-4">Spicy chicken wings with tangy sauce</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹179</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="hot-wings-4pc" data-name="4 Pcs Hot Wings" data-price="179" data-image="https://images.unsplash.com/photo-1600289031464-74d374b64991?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Snack 4 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1541576997938-be0c29e3c718?w=600&q=80" alt="Chicken Popcorn" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="chicken-nuggets-6pc" data-item-name="Chicken Nuggets - 6 Pcs" data-item-price="129" data-item-image="https://images.unsplash.com/photo-1541576997938-be0c29e3c718?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Chicken Nuggets - 6 Pcs</h3>
                         <p class="text-gray-600 text-sm mb-4">Tender chicken nuggets with dip</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹129</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="chicken-nuggets-6pc" data-name="Chicken Nuggets - 6 Pcs" data-price="129" data-image="https://images.unsplash.com/photo-1541576997938-be0c29e3c718?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Snack 5 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80" alt="Veg Strips" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="veg-patty" data-item-name="Veg Patty" data-item-price="79" data-item-image="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full mb-2 font-semibold">VEG</span>
@@ -462,22 +733,28 @@
                         <p class="text-gray-600 text-sm mb-4">Crispy vegetable patty</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹79</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="veg-patty" data-name="Veg Patty" data-price="79" data-image="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Snack 6 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=600&q=80" alt="Coleslaw" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="coleslaw" data-item-name="Coleslaw - Regular" data-item-price="89" data-item-image="https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Coleslaw - Regular</h3>
                         <p class="text-gray-600 text-sm mb-4">Fresh creamy coleslaw</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹89</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="coleslaw" data-name="Coleslaw - Regular" data-price="89" data-image="https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
@@ -495,75 +772,105 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Beverage 1 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=600&q=80" alt="Pepsi" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="pepsi" data-item-name="Pepsi (475ml)" data-item-price="57" data-item-image="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Pepsi (475ml)</h3>
                         <p class="text-gray-600 text-sm mb-4">Chilled Pepsi soft drink</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹57</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="pepsi" data-name="Pepsi (475ml)" data-price="57" data-image="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Beverage 2 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1581006852262-e4307cf6283a?w=600&q=80" alt="7Up" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="7up" data-item-name="7Up (475ml)" data-item-price="57" data-item-image="https://images.unsplash.com/photo-1581006852262-e4307cf6283a?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">7Up (475ml)</h3>
                         <p class="text-gray-600 text-sm mb-4">Refreshing lemon lime drink</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹57</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="7up" data-name="7Up (475ml)" data-price="57" data-image="https://images.unsplash.com/photo-1581006852262-e4307cf6283a?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Beverage 3 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=600&q=80" alt="Mirinda" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="mirinda" data-item-name="Mirinda (475ml)" data-item-price="57" data-item-image="https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Mirinda (475ml)</h3>
                         <p class="text-gray-600 text-sm mb-4">Orange flavored fizzy drink</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹57</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="mirinda" data-name="Mirinda (475ml)" data-price="57" data-image="https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Beverage 4 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1534353436294-0dbd4bdac845?w=600&q=80" alt="Lemonade" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="lemonade" data-item-name="Fresh Lemonade" data-item-price="79" data-item-image="https://images.unsplash.com/photo-1534353436294-0dbd4bdac845?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Fresh Lemonade</h3>
                         <p class="text-gray-600 text-sm mb-4">Freshly squeezed lemon drink</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹79</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="lemonade" data-name="Fresh Lemonade" data-price="79" data-image="https://images.unsplash.com/photo-1534353436294-0dbd4bdac845?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Beverage 5 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1558882268-13a5a2e0d07d?w=600&q=80" alt="Water" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="mineral-water" data-item-name="Mineral Water (1L)" data-item-price="40" data-item-image="https://images.unsplash.com/photo-1558882268-13a5a2e0d07d?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Mineral Water (1L)</h3>
                         <p class="text-gray-600 text-sm mb-4">Packaged drinking water</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹40</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="mineral-water" data-name="Mineral Water (1L)" data-price="40" data-image="https://images.unsplash.com/photo-1558882268-13a5a2e0d07d?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
@@ -581,8 +888,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Dessert 1 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=80" alt="Chocolate Lava Cake" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="lava-cake" data-item-name="Chocolate Lava Cake" data-item-price="109" data-item-image="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">BESTSELLER</span>
@@ -590,45 +903,63 @@
                         <p class="text-gray-600 text-sm mb-4">Warm chocolate cake with molten center</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹109</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="lava-cake" data-name="Chocolate Lava Cake" data-price="109" data-image="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Dessert 2 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=600&q=80" alt="Soft Serve" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="soft-serve" data-item-name="Soft Serve Ice Cream" data-item-price="69" data-item-image="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Soft Serve Ice Cream</h3>
                         <p class="text-gray-600 text-sm mb-4">Creamy vanilla soft serve</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹69</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="soft-serve" data-name="Soft Serve Ice Cream" data-price="69" data-image="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Dessert 3 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1607920591413-4ec007e70023?w=600&q=80" alt="Brownie" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="brownie" data-item-name="Chocolate Chip Brownie" data-item-price="89" data-item-image="https://images.unsplash.com/photo-1607920591413-4ec007e70023?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <h3 class="font-bold text-xl mb-2 text-gray-800 mt-7">Chocolate Chip Brownie</h3>
                         <p class="text-gray-600 text-sm mb-4">Rich chocolate brownie with chips</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹89</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="brownie" data-name="Chocolate Chip Brownie" data-price="89" data-image="https://images.unsplash.com/photo-1607920591413-4ec007e70023?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Dessert 4 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
-                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                    <div class="aspect-square bg-gray-100 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&q=80" alt="Sundae" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <button class="favorite-button absolute top-3 right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+                                data-item-id="hot-fudge-sundae" data-item-name="Hot Fudge Sundae" data-item-price="99" data-item-image="https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&q=80">
+                            <svg class="heart-icon w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="p-6">
                         <span class="inline-block bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full mb-2 font-semibold">POPULAR</span>
@@ -636,12 +967,24 @@
                         <p class="text-gray-600 text-sm mb-4">Ice cream with hot chocolate sauce</p>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold text-kfc-red">₹99</span>
-                            <a href="#" class="bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium">ADD</a>
+                            <button class="add-to-cart-btn bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium" data-id="hot-fudge-sundae" data-name="Hot Fudge Sundae" data-price="99" data-image="https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&q=80">ADD</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="hidden text-center py-16">
+            <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">No Items Found</h3>
+            <p class="text-gray-600 mb-6">Try adjusting your filters or search terms</p>
+            <button id="resetFiltersFromEmpty" class="bg-kfc-red text-white px-8 py-3 rounded-full hover:bg-red-700 transition font-medium">
+                Reset All Filters
+            </button>
+        </div>
 
     </main>
 
@@ -725,5 +1068,328 @@
             </div>
         </div>
     </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cartOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+    <div id="cartSidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-gray-50 shadow-2xl z-50 transform translate-x-full transition-transform duration-300">
+        <div class="flex flex-col h-full">
+            <!-- Cart Header -->
+            <div class="bg-kfc-red text-white p-6 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold">Your Cart</h2>
+                    <p class="text-sm opacity-90"><span class="cart-count">0</span> items</p>
+                </div>
+                <button class="cart-toggle w-10 h-10 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Cart Items -->
+            <div id="cartItems" class="flex-grow overflow-y-auto p-4 space-y-4">
+                <!-- Cart items will be dynamically inserted here -->
+            </div>
+
+            <!-- Cart Footer -->
+            <div class="bg-white border-t border-gray-200 p-6 space-y-4">
+                <div class="space-y-2">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Subtotal</span>
+                        <span id="cartSubtotal" class="font-medium">₹0</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Delivery Fee</span>
+                        <span class="font-medium">₹40</span>
+                    </div>
+                    <div class="flex justify-between text-xl font-bold text-kfc-dark border-t-2 pt-2">
+                        <span>Total</span>
+                        <span id="cartTotal" class="text-kfc-red">₹0</span>
+                    </div>
+                </div>
+                <button id="checkoutButton" class="w-full bg-kfc-red text-white py-4 rounded-full hover:bg-red-700 transition font-bold text-lg">
+                    PROCEED TO CHECKOUT
+                </button>
+                <button id="clearCartButton" class="w-full bg-gray-200 text-gray-700 py-2 rounded-full hover:bg-gray-300 transition font-medium text-sm">
+                    Clear Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModalOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+    <div id="authModal" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto">
+        <!-- Sign In Form -->
+        <div id="signinForm" class="p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Sign In</h2>
+                <button class="close-auth-modal text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="signinFormElement" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="signinEmail" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="signinPassword" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <button type="submit" class="w-full bg-kfc-red text-white py-3 rounded-lg hover:bg-red-700 transition font-bold">
+                    Sign In
+                </button>
+            </form>
+            <p class="text-center text-gray-600 mt-4">
+                Don't have an account? <a href="#" class="show-signup text-kfc-red font-medium hover:underline">Sign Up</a>
+            </p>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div id="signupForm" class="p-8 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Sign Up</h2>
+                <button class="close-auth-modal text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="signupFormElement" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input type="text" id="signupName" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="signupEmail" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                    <input type="tel" id="signupPhone" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="signupPassword" required minlength="6"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <button type="submit" class="w-full bg-kfc-red text-white py-3 rounded-lg hover:bg-red-700 transition font-bold">
+                    Sign Up
+                </button>
+            </form>
+            <p class="text-center text-gray-600 mt-4">
+                Already have an account? <a href="#" class="show-signin text-kfc-red font-medium hover:underline">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="cart.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Advanced Search, Filter, and Sort System
+        class MenuFilterSystem {
+            constructor() {
+                this.searchInput = document.getElementById('searchInput');
+                this.categoryFilters = document.querySelectorAll('.category-filter');
+                this.priceRange = document.getElementById('priceRange');
+                this.priceRangeValue = document.getElementById('priceRangeValue');
+                this.sortBy = document.getElementById('sortBy');
+                this.clearFiltersBtn = document.getElementById('clearFilters');
+                this.resultCount = document.getElementById('resultCount');
+                this.menuSections = document.querySelectorAll('main section[id]');
+                this.noResults = document.getElementById('noResults');
+                this.resetFiltersFromEmpty = document.getElementById('resetFiltersFromEmpty');
+                
+                // Item data with ratings and popularity
+                this.itemData = {
+                    'chicken-bucket-8pc': { rating: 4.8, popularity: 95 },
+                    'chicken-bucket-12pc': { rating: 4.7, popularity: 88 },
+                    'hot-wings-6pc': { rating: 4.6, popularity: 82 },
+                    'mingles-bucket': { rating: 4.5, popularity: 75 },
+                    'chicken-strips-5pc': { rating: 4.4, popularity: 70 },
+                    'smoky-grilled': { rating: 4.7, popularity: 65 },
+                    'zinger-pro': { rating: 4.9, popularity: 98 },
+                    'classic-zinger': { rating: 4.6, popularity: 85 },
+                    'veg-zinger': { rating: 4.5, popularity: 72 },
+                    'classic-chicken': { rating: 4.3, popularity: 68 },
+                    'tandoori-zinger': { rating: 4.7, popularity: 78 },
+                    'double-down': { rating: 4.8, popularity: 80 },
+                    'classic-biryani': { rating: 4.7, popularity: 90 },
+                    'hyderabadi-biryani': { rating: 4.8, popularity: 87 },
+                    'veg-biryani': { rating: 4.4, popularity: 70 },
+                    'tandoori-biryani': { rating: 4.6, popularity: 75 },
+                    'popcorn-chicken': { rating: 4.6, popularity: 92 },
+                    'peri-peri-fries': { rating: 4.5, popularity: 85 },
+                    'hot-wings-4pc': { rating: 4.6, popularity: 80 },
+                    'chicken-nuggets-6pc': { rating: 4.4, popularity: 75 },
+                    'veg-patty': { rating: 4.2, popularity: 60 },
+                    'coleslaw': { rating: 4.3, popularity: 65 },
+                    'pepsi': { rating: 4.5, popularity: 88 },
+                    '7up': { rating: 4.4, popularity: 78 },
+                    'mirinda': { rating: 4.3, popularity: 70 },
+                    'lemonade': { rating: 4.6, popularity: 72 },
+                    'mineral-water': { rating: 4.5, popularity: 65 },
+                    'lava-cake': { rating: 4.9, popularity: 95 },
+                    'soft-serve': { rating: 4.6, popularity: 82 },
+                    'brownie': { rating: 4.7, popularity: 78 },
+                    'hot-fudge-sundae': { rating: 4.8, popularity: 85 }
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                // Search input
+                this.searchInput.addEventListener('input', () => this.applyFilters());
+                
+                // Category filters
+                this.categoryFilters.forEach(filter => {
+                    filter.addEventListener('change', () => this.applyFilters());
+                });
+                
+                // Price range
+                this.priceRange.addEventListener('input', (e) => {
+                    this.priceRangeValue.textContent = `0 - ${e.target.value}`;
+                    this.applyFilters();
+                });
+                
+                // Sort
+                this.sortBy.addEventListener('change', () => this.applyFilters());
+                
+                // Clear filters
+                this.clearFiltersBtn.addEventListener('click', () => this.clearAllFilters());
+                
+                // Reset from no results
+                this.resetFiltersFromEmpty.addEventListener('click', () => this.clearAllFilters());
+            }
+            
+            applyFilters() {
+                const searchTerm = this.searchInput.value.toLowerCase();
+                const maxPrice = parseInt(this.priceRange.value);
+                const selectedCategories = Array.from(this.categoryFilters)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+                const sortOption = this.sortBy.value;
+                
+                let visibleCount = 0;
+                
+                this.menuSections.forEach(section => {
+                    const sectionId = section.id;
+                    const items = Array.from(section.querySelectorAll('.bg-white.rounded-xl'));
+                    let hasVisibleItem = false;
+                    
+                    // Check if section category is selected
+                    if (!selectedCategories.includes(sectionId)) {
+                        section.style.display = 'none';
+                        return;
+                    }
+                    
+                    // Filter and collect items with their data
+                    const itemsWithData = items.map(item => {
+                        const itemName = item.querySelector('h3').textContent.toLowerCase();
+                        const itemDesc = item.querySelector('p').textContent.toLowerCase();
+                        const priceText = item.querySelector('.text-2xl.font-bold').textContent;
+                        const price = parseInt(priceText.replace(/[^\d]/g, ''));
+                        const itemId = item.querySelector('.add-to-cart-btn').dataset.id;
+                        
+                        // Apply filters
+                        const matchesSearch = !searchTerm || itemName.includes(searchTerm) || itemDesc.includes(searchTerm);
+                        const matchesPrice = price <= maxPrice;
+                        const isVisible = matchesSearch && matchesPrice;
+                        
+                        return {
+                            element: item,
+                            price: price,
+                            rating: this.itemData[itemId]?.rating || 4.0,
+                            popularity: this.itemData[itemId]?.popularity || 50,
+                            visible: isVisible
+                        };
+                    });
+                    
+                    // Sort items
+                    this.sortItems(itemsWithData, sortOption);
+                    
+                    // Apply visibility and reorder
+                    const container = section.querySelector('.grid');
+                    itemsWithData.forEach(itemData => {
+                        if (itemData.visible) {
+                            itemData.element.style.display = '';
+                            hasVisibleItem = true;
+                            visibleCount++;
+                        } else {
+                            itemData.element.style.display = 'none';
+                        }
+                        // Reorder in DOM
+                        container.appendChild(itemData.element);
+                    });
+                    
+                    // Show/hide section
+                    section.style.display = hasVisibleItem ? '' : 'none';
+                });
+                
+                // Update result count
+                this.resultCount.textContent = visibleCount;
+                
+                // Show/hide no results message
+                if (visibleCount === 0) {
+                    this.noResults.classList.remove('hidden');
+                } else {
+                    this.noResults.classList.add('hidden');
+                }
+            }
+            
+            sortItems(items, sortOption) {
+                switch(sortOption) {
+                    case 'price-low':
+                        items.sort((a, b) => a.price - b.price);
+                        break;
+                    case 'price-high':
+                        items.sort((a, b) => b.price - a.price);
+                        break;
+                    case 'popularity':
+                        items.sort((a, b) => b.popularity - a.popularity);
+                        break;
+                    case 'rating':
+                        items.sort((a, b) => b.rating - a.rating);
+                        break;
+                    default:
+                        // Default order (no sorting)
+                        break;
+                }
+            }
+            
+            clearAllFilters() {
+                // Reset search
+                this.searchInput.value = '';
+                
+                // Check all categories
+                this.categoryFilters.forEach(filter => filter.checked = true);
+                
+                // Reset price range
+                this.priceRange.value = 1000;
+                this.priceRangeValue.textContent = '0 - 1000';
+                
+                // Reset sort
+                this.sortBy.value = 'default';
+                
+                // Apply filters
+                this.applyFilters();
+            }
+        }
+        
+        // Initialize filter system when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new MenuFilterSystem();
+        });
+    </script>
 </body>
 </html>

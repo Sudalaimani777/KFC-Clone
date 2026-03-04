@@ -1,0 +1,79 @@
+<!-- Auth Modal HTML Snippet -->
+<!-- Add this before </body> tag and after cart sidebar -->
+
+    <!-- Auth Modal -->
+    <div id="authModalOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+    <div id="authModal" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 max-h-[90vh] overflow-y-auto">
+        <!-- Sign In Form -->
+        <div id="signinForm" class="p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Sign In</h2>
+                <button class="close-auth-modal text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="signinFormElement" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="signinEmail" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="signinPassword" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <button type="submit" class="w-full bg-kfc-red text-white py-3 rounded-lg hover:bg-red-700 transition font-bold">
+                    Sign In
+                </button>
+            </form>
+            <p class="text-center text-gray-600 mt-4">
+                Don't have an account? <a href="#" class="show-signup text-kfc-red font-medium hover:underline">Sign Up</a>
+            </p>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div id="signupForm" class="p-8 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Sign Up</h2>
+                <button class="close-auth-modal text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="signupFormElement" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input type="text" id="signupName" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="signupEmail" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                    <input type="tel" id="signupPhone" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="signupPassword" required minlength="6"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kfc-red focus:border-transparent">
+                </div>
+                <button type="submit" class="w-full bg-kfc-red text-white py-3 rounded-lg hover:bg-red-700 transition font-bold">
+                    Sign Up
+                </button>
+            </form>
+            <p class="text-center text-gray-600 mt-4">
+                Already have an account? <a href="#" class="show-signin text-kfc-red font-medium hover:underline">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Add auth.js script -->
+    <script src="auth.js"></script>

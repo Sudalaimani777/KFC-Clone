@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - KFC India</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'kfc-red': '#E4002B',
+                        'kfc-dark': '#202124',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased bg-gray-50">
+    <!-- Header / Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="flex items-center">
+                    <img src="./Resources/Icons/kfcLogo.492728c6.svg" alt="KFC Logo" class="h-12 md:h-16">
+                </a>
+                
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="menu.html" class="text-gray-700 hover:text-kfc-red font-medium transition">MENU</a>
+                    <a href="deals.html" class="text-gray-700 hover:text-kfc-red font-medium transition">DEALS</a>
+                    <a href="locations.html" class="text-gray-700 hover:text-kfc-red font-medium transition">LOCATE US</a>
+                    <a href="about.html" class="text-gray-700 hover:text-kfc-red font-medium transition">ABOUT</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="sign-in-button hidden md:flex items-center space-x-2 text-gray-700 hover:text-kfc-red transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <span class="font-medium">Sign In</span>
+                    </a>
+                    <div class="user-menu hidden md:flex items-center space-x-2 relative">
+                        <span class="text-gray-700 font-medium">Hi, <span class="user-name-display text-kfc-red"></span>!</span>
+                        <a href="profile.html" class="text-gray-700 hover:text-kfc-red transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <button class="cart-toggle bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium relative">
+                        <span class="cart-button-price">₹0</span>
+                        <span class="cart-count hidden absolute -top-2 -right-2 bg-yellow-400 text-kfc-dark w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">0</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="lg:hidden mt-4 pt-4 border-t border-gray-200">
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="menu.html" class="text-gray-700 hover:text-kfc-red font-medium text-sm">MENU</a>
+                    <a href="deals.html" class="text-gray-700 hover:text-kfc-red font-medium text-sm">DEALS</a>
+                    <a href="locations.html" class="text-gray-700 hover:text-kfc-red font-medium text-sm">LOCATE US</a>
+                    <a href="about.html" class="text-gray-700 hover:text-kfc-red font-medium text-sm">ABOUT</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Profile Content -->
+    <main class="container mx-auto px-4 py-8" id="profileContent">
+        <!-- Login Required Message (shown if not logged in) -->
+        <div id="loginRequired" class="hidden max-w-2xl mx-auto text-center py-16">
+            <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Please Sign In</h2>
+            <p class="text-gray-600 mb-8">You need to be logged in to view your profile</p>
+            <button class="sign-in-button bg-kfc-red text-white px-8 py-3 rounded-full hover:bg-red-700 transition font-medium">
+                Sign In
+            </button>
+        </div>
+
+        <!-- Profile Content (shown if logged in) -->
+        <div id="userProfile" class="hidden">
+            <!-- Profile Header -->
+            <div class="bg-gradient-to-r from-kfc-red to-red-700 text-white rounded-2xl p-8 mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-bold mb-2" id="profileName">Loading...</h1>
+                        <p class="text-lg opacity-90" id="profileEmail">Loading...</p>
+                    </div>
+                    <button class="sign-out-button bg-white text-kfc-red px-6 py-2 rounded-full hover:bg-gray-100 transition font-medium">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="mb-8 border-b border-gray-200">
+                <div class="flex space-x-8">
+                    <button onclick="showTab('favorites')" id="favoritesTab" class="pb-4 border-b-2 border-kfc-red font-bold text-kfc-red">
+                        My Favorites
+                    </button>
+                    <button onclick="showTab('orders')" id="ordersTab" class="pb-4 border-b-2 border-transparent font-medium text-gray-600 hover:text-kfc-red transition">
+                        Order History
+                    </button>
+                </div>
+            </div>
+
+            <!-- Favorites Tab -->
+            <div id="favoritesContent" class="tab-content">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">My Favorite Items</h2>
+                <div id="favoritesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Favorites will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="ordersContent" class="tab-content hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Order History</h2>
+                <div id="ordersList" class="space-y-4">
+                    <!-- Orders will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-kfc-dark text-white pt-16 pb-8 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p class="text-gray-400 text-sm">© 2026 KFC Corporation. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cartOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+    <div id="cartSidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-gray-50 shadow-2xl z-50 transform translate-x-full transition-transform duration-300">
+        <div class="flex flex-col h-full">
+            <div class="bg-kfc-red text-white p-6 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold">Your Cart</h2>
+                    <p class="text-sm opacity-90"><span class="cart-count">0</span> items</p>
+                </div>
+                <button class="cart-toggle w-10 h-10 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="cartItems" class="flex-grow overflow-y-auto p-4 space-y-4"></div>
+            <div class="bg-white border-t border-gray-200 p-6 space-y-4">
+                <div class="space-y-2">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Subtotal</span>
+                        <span id="cartSubtotal" class="font-medium">₹0</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Delivery Fee</span>
+                        <span class="font-medium">₹40</span>
+                    </div>
+                    <div class="flex justify-between text-xl font-bold text-kfc-dark border-t-2 pt-2">
+                        <span>Total</span>
+                        <span id="cartTotal" class="text-kfc-red">₹0</span>
+                    </div>
+                </div>
+                <button id="checkoutButton" class="w-full bg-kfc-red text-white py-4 rounded-full hover:bg-red-700 transition font-bold text-lg">
+                    PROCEED TO CHECKOUT
+                </button>
+                <button id="clearCartButton" class="w-full bg-gray-200 text-gray-700 py-2 rounded-full hover:bg-gray-300 transition font-medium text-sm">
+                    Clear Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="cart.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Load profile data
+        function loadProfile() {
+            if (!auth.isLoggedIn()) {
+                document.getElementById('loginRequired').classList.remove('hidden');
+                document.getElementById('userProfile').classList.add('hidden');
+                return;
+            }
+
+            const user = auth.getCurrentUser();
+            document.getElementById('loginRequired').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+            
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileEmail').textContent = user.email;
+            
+            loadFavorites();
+            loadOrders();
+        }
+
+        // Load favorites
+        function loadFavorites() {
+            const favorites = auth.getFavorites();
+            const favoritesList = document.getElementById('favoritesList');
+            
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = `
+                    <div class="col-span-full text-center py-16">
+                        <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-gray-700 mb-2">No Favorites Yet</h3>
+                        <p class="text-gray-500 mb-6">Start adding your favorite items from the menu!</p>
+                        <a href="menu.html" class="inline-block bg-kfc-red text-white px-8 py-3 rounded-full hover:bg-red-700 transition font-medium">
+                            Browse Menu
+                        </a>
+                    </div>
+                `;
+            } else {
+                favoritesList.innerHTML = favorites.map(item => `
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="aspect-square bg-gray-100 overflow-hidden">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-1">${item.name}</h3>
+                            <p class="text-kfc-red font-bold text-xl mb-3">₹${item.price}</p>
+                            <button onclick="addToCartFromProfile('${item.id}', '${item.name}', ${item.price}, '${item.image}')" 
+                                    class="w-full bg-kfc-red text-white py-2 rounded-full hover:bg-red-700 transition font-medium">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Load order history
+        function loadOrders() {
+            const orders = auth.getOrderHistory();
+            const ordersList = document.getElementById('ordersList');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="text-center py-16">
+                        <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold text-gray-700 mb-2">No Orders Yet</h3>
+                        <p class="text-gray-500 mb-6">Your order history will appear here</p>
+                        <a href="menu.html" class="inline-block bg-kfc-red text-white px-8 py-3 rounded-full hover:bg-red-700 transition font-medium">
+                            Order Now
+                        </a>
+                    </div>
+                `;
+            } else {
+                ordersList.innerHTML = orders.map(order => {
+                    const orderDate = new Date(order.date);
+                    return `
+                        <div class="bg-white rounded-xl shadow-md p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="font-bold text-lg">Order #${order.id.slice(-8)}</h3>
+                                    <p class="text-gray-600 text-sm">${orderDate.toLocaleDateString()} at ${orderDate.toLocaleTimeString()}</p>
+                                </div>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                    ${order.status}
+                                </span>
+                            </div>
+                            <div class="border-t border-gray-200 pt-4">
+                                <div class="space-y-2 mb-4">
+                                    ${order.items.map(item => `
+                                        <div class="flex justify-between text-sm">
+                                            <span>${item.quantity}x ${item.name}</span>
+                                            <span class="font-medium">₹${item.price * item.quantity}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div class="border-t border-gray-200 pt-4 flex justify-between items-center">
+                                    <span class="font-bold text-lg">Total</span>
+                                    <span class="font-bold text-xl text-kfc-red">₹${order.total}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Show tab
+        function showTab(tabName) {
+            // Update tab buttons
+            document.getElementById('favoritesTab').className = 'pb-4 border-b-2 border-transparent font-medium text-gray-600 hover:text-kfc-red transition';
+            document.getElementById('ordersTab').className = 'pb-4 border-b-2 border-transparent font-medium text-gray-600 hover:text-kfc-red transition';
+            
+            if (tabName === 'favorites') {
+                document.getElementById('favoritesTab').className = 'pb-4 border-b-2 border-kfc-red font-bold text-kfc-red';
+            } else {
+                document.getElementById('ordersTab').className = 'pb-4 border-b-2 border-kfc-red font-bold text-kfc-red';
+            }
+            
+            // Show/hide content
+            document.getElementById('favoritesContent').classList.toggle('hidden', tabName !== 'favorites');
+            document.getElementById('ordersContent').classList.toggle('hidden', tabName !== 'orders');
+        }
+
+        // Add to cart from profile
+        function addToCartFromProfile(id, name, price, image) {
+            cart.addToCart(id, name, price, image);
+        }
+
+        // Load profile on page load
+        window.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>
