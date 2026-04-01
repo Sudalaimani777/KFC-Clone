@@ -35,12 +35,20 @@
                 </div>
                 
                 <div class="flex items-center space-x-4">
-                    <a href="#" class="hidden md:flex items-center space-x-2 text-gray-700 hover:text-kfc-red transition">
+                    <a href="#" class="sign-in-button hidden md:flex items-center space-x-2 text-gray-700 hover:text-kfc-red transition">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                         <span class="font-medium">Sign In</span>
                     </a>
+                    <div class="user-menu hidden md:flex items-center space-x-2">
+                        <span class="text-gray-700 font-medium">Hi, <span class="user-name-display text-kfc-red"></span>!</span>
+                        <a href="profile.html" class="text-gray-700 hover:text-kfc-red transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </a>
+                    </div>
                     <button class="cart-toggle bg-kfc-red text-white px-6 py-2 rounded-full hover:bg-red-700 transition font-medium relative">
                         <span class="cart-button-price">₹0</span>
                         <span class="cart-count hidden absolute -top-2 -right-2 bg-yellow-400 text-kfc-dark w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">0</span>
